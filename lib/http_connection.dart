@@ -571,7 +571,7 @@ class HttpConnection implements IConnection {
   Future<void> _startTransport(String? url, TransferFormat transferFormat) {
     _transport!.onReceive = onreceive;
     _transport!.onClose = _stopConnection;
-    return _transport!.connect(url, transferFormat);
+    return _transport!.connect(url, transferFormat, _options.headers);
   }
 
   ITransport _resolveTransport(

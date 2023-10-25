@@ -46,7 +46,7 @@ class LongPollingTransport implements ITransport {
   }
 
   @override
-  Future<void> connect(String? url, TransferFormat transferFormat) async {
+  Future<void> connect(String? url, TransferFormat transferFormat, MessageHeaders? headers) async {
     assert(!isStringEmpty(url));
 
     _url = url;
@@ -60,7 +60,7 @@ class LongPollingTransport implements ITransport {
 
     final pollOptions = SignalRHttpRequest(
         abortSignal: _pollAbort.signal,
-        headers: MessageHeaders(),
+        headers: headers ?? MessageHeaders(),
         timeout: 100000);
 
     final token = await _getAccessToken();

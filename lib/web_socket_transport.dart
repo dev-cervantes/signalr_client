@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:logging/logging.dart';
+import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'errors.dart';
+import 'ihub_protocol.dart';
 import 'itransport.dart';
 import 'utils.dart';
 
@@ -31,7 +33,7 @@ class WebSocketTransport implements ITransport {
         this._logMessageContent = logMessageContent;
 
   @override
-  Future<void> connect(String? url, TransferFormat transferFormat) async {
+  Future<void> connect(String? url, TransferFormat transferFormat, MessageHeaders? headers) async {
     assert(url != null);
 
     _logger?.finest("(WebSockets transport) Connecting");
@@ -50,7 +52,7 @@ class WebSocketTransport implements ITransport {
     var opened = false;
     url = url!.replaceFirst('http', 'ws');
     _logger?.finest("WebSocket try connecting to '$url'.");
-    _webSocket = WebSocketChannel.connect(Uri.parse(url));
+    _webSocket = IOWebSocketChannel.connect(Uri.parse(url), headers: headers?.asMap);
     opened = true;
     if (!websocketCompleter.isCompleted) websocketCompleter.complete();
     _logger?.info("WebSocket connected to '$url'.");
